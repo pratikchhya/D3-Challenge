@@ -1,3 +1,16 @@
+// The code for the chart is wrapped inside a function that
+// automatically resizes the chart
+function makeResponsive() {
+
+  // if the SVG area isn't empty when the browser loads,
+  // remove it and replace it with a resized version of the chart
+  var svgArea = d3.select("body").select("svg");
+
+  // clear svg is not empty
+  if (!svgArea.empty()) {
+    svgArea.remove();
+  }
+
 // Define SVG area dimensions
 var svgWidth = 960;
 var svgHeight = 550;
@@ -35,14 +48,12 @@ var chartGroup = svg.append("g")
     // console.log("healthcare:", data.healthcare);
   });
   var xLinearScale = d3.scaleLinear()
-  .domain([8, d3.max(stateData, d => d.poverty)])
-  
-    .range([0,chartWidth]);
+  .domain([d3.min(stateData, d => d.poverty)-1, d3.max(stateData, d => d.poverty)+1])
+  .range([0,chartWidth]);
 
   var yLinearScale = d3.scaleLinear()
-  .domain([0,d3.max(stateData, d => d.healthcare)])
-
-    .range([chartHeight,0]);
+  .domain([d3.min(stateData, d => d.healthcare)-2, d3.max(stateData, d => d.healthcare)+2])
+  .range([chartHeight,0]);
 
   var bottomAxis = d3.axisBottom(xLinearScale);
   var leftAxis = d3.axisLeft(yLinearScale);
@@ -61,7 +72,7 @@ var chartGroup = svg.append("g")
   .attr("cx", d => xLinearScale(d.poverty))
   .attr("cy", d => yLinearScale(d.healthcare))
   .attr("r","10")
-  .attr("fill","lightblue")
+  .attr("fill","#a0f1f6")
   .attr("opacity",".75")
   .attr("stroke","black");
 
@@ -116,18 +127,27 @@ var chartGroup = svg.append("g")
       toolTip.hide(data);
     });
 
-    chartGroup.append("text")
+   chartGroup.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - margin.left + 40)
     .attr("x", 0 - (chartHeight / 2))
     .attr("dy", "1em")
-    .attr("class", "axisText")
+    .attr("class", "aText")
     .text("Lacks healthcare (%)");
 
-  chartGroup.append("text")
+   chartGroup.append("text")
     .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margin.top + 30})`)
-    .attr("class", "axisText")
+    .attr("class", "aText")
     .text("In poverty(%)");
-}).catch(function(error) {
-  console.log(error);
+    }).catch(function(error) {
+      console.log(error);
 });
+
+}
+
+// When the browser loads, makeResponsive() is called.
+makeResponsive();
+
+// When the browser window is resized, makeResponsive() is called.
+d3.select(window).on("resize", makeResponsive);
+
