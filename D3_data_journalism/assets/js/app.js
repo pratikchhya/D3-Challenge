@@ -19,7 +19,7 @@ var svgHeight = 550;
 var chartMargin = {
   top: 30,
   right: 40,
-  bottom: 60,
+  bottom: 80,
   left:100
 };
 
@@ -129,14 +129,14 @@ var chartGroup = svg.append("g")
 
    chartGroup.append("text")
     .attr("transform", "rotate(-90)")
-    .attr("y", 0 - margin.left + 40)
+    .attr("y", 0 - chartMargin.left + 40)
     .attr("x", 0 - (chartHeight / 2))
     .attr("dy", "1em")
     .attr("class", "aText")
     .text("Lacks healthcare (%)");
 
    chartGroup.append("text")
-    .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + margin.top + 30})`)
+    .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + chartMargin.top + 30})`)
     .attr("class", "aText")
     .text("In poverty(%)");
     }).catch(function(error) {
